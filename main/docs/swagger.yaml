@@ -1,0 +1,354 @@
+basePath: /
+definitions:
+  model.HTTPError:
+    properties:
+      error:
+        $ref: '#/definitions/model.HTTPErrorItem'
+        description: 错误项
+        type: object
+    type: object
+  model.HTTPErrorItem:
+    properties:
+      code:
+        description: 错误码
+        type: integer
+      message:
+        description: 错误信息
+        type: string
+    type: object
+  model.ScheduleDto:
+    properties:
+      cron:
+        type: string
+      description:
+        type: string
+      schedule_task_name:
+        type: string
+      task_id:
+        type: string
+    type: object
+  model.TaskDto:
+    properties:
+      params:
+        type: string
+      task_api:
+        type: string
+      task_name:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: RBAC scaffolding based on Gin + Gorm + Casbin + Dig.
+  license: {}
+  title: op-robot
+  version: 5.2.1
+paths:
+  /schedules:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 获取定时任务列表
+      tags:
+      - Schedule
+    put:
+      parameters:
+      - description: 定时任务信息
+        in: body
+        name: ScheduleDto
+        required: true
+        schema:
+          $ref: '#/definitions/model.ScheduleDto'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 新建定时任务
+      tags:
+      - Schedule
+  /schedules/{schedule_id}:
+    delete:
+      parameters:
+      - description: 定时任务ID
+        in: path
+        name: schedule_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 删除定时任务
+      tags:
+      - Schedule
+    get:
+      parameters:
+      - description: 定时任务ID
+        in: path
+        name: schedule_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 获取定时任务详情
+      tags:
+      - Schedule
+    post:
+      parameters:
+      - description: 定时任务ID
+        in: path
+        name: schedule_id
+        required: true
+        type: string
+      - description: 定时任务详情
+        in: body
+        name: ScheduleDto
+        required: true
+        schema:
+          $ref: '#/definitions/model.ScheduleDto'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 修改定时任务
+      tags:
+      - Schedule
+  /schedules/{schedule_id}/disable:
+    post:
+      parameters:
+      - description: 定时任务ID
+        in: path
+        name: schedule_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 停止定时任务
+      tags:
+      - Schedule
+  /schedules/{schedule_id}/enable:
+    post:
+      parameters:
+      - description: 定时任务ID
+        in: path
+        name: schedule_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 运行定时任务
+      tags:
+      - Schedule
+  /task:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 获取任务列表
+      tags:
+      - Task
+    put:
+      parameters:
+      - description: 新任务详情
+        in: body
+        name: TaskDto
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskDto'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 创建新任务
+      tags:
+      - Task
+  /task/{task_id}:
+    delete:
+      parameters:
+      - description: 任务ID
+        in: path
+        name: task_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 删除任务
+      tags:
+      - Task
+    post:
+      parameters:
+      - description: 任务ID
+        in: path
+        name: task_id
+        required: true
+        type: string
+      - description: 任务详情
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskDto'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: '{error:{code:0,message:未授权}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "404":
+          description: '{error:{code:0,message:资源不存在}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+        "500":
+          description: '{error:{code:0,message:服务器错误}}'
+          schema:
+            $ref: '#/definitions/model.HTTPError'
+      summary: 修改任务
+      tags:
+      - Task
+schemes:
+- http
+- https
+swagger: "2.0"
