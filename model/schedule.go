@@ -115,7 +115,7 @@ func RemoveSchedule(id string) error {
 		return err
 	}
 	defer db.Close()
-	result := db.Model(&Schedule{}).Where("schedule_id=?", id).Delete(&Config{})
+	result := db.Model(&Schedule{}).Where("schedule_id=?", id).Delete(&Schedule{})
 	if err := result.Error; err != nil {
 		return errors.WithStack(err)
 	}

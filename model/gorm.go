@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"gin-monitor/config"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -66,7 +65,6 @@ func InitMysql() error {
 
 func getDB() (*gorm.DB, error) {
 	dns := config.MySQLDSN()
-	fmt.Println(dns)
 	return NewDB(&Config{
 		Debug:        viper.GetBool("gorm.debug"),
 		DBType:       viper.GetString("gorm.db_type"),

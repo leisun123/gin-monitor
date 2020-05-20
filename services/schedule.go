@@ -4,10 +4,12 @@ import (
 	"errors"
 	"gin-monitor/constants"
 	"gin-monitor/lib/cron"
+	"gin-monitor/mail"
 	"gin-monitor/model"
 	"gin-monitor/utils"
 	"github.com/apex/log"
 	"runtime/debug"
+	"time"
 )
 
 var Sched *Scheduler
@@ -17,18 +19,30 @@ type Scheduler struct {
 }
 
 
-func AddScheduleTask(s model.Schedule) func() {
+func AddScheduleTask(sch model.Schedule) func() {
 	return func() {
-		id := s.TaskId
+		id := sch.TaskId
 		task, err := model.GetTask(id)
 		if err != nil {
 			return
 		}
-		err = utils.HttpPost(task.TaskAPI, task.Params)
+		body, err:= utils.HttpPost(task.TaskAPI, task.Params)
 		if err != nil {
 			log.Errorf(err.Error())
 			return
 		}
+		s, c := model.GetCol("results")
+		defer s.Close()
+		var item = model.ResultMgo{
+			ScheduleTaskName: sch.Name,
+			Result: body,
+			Time: time.Now().Local(),
+		}
+		if err := c.Insert(&item); err != nil {
+			debug.PrintStack()
+			log.Errorf(err.Error())
+		}
+		log.Infof("Success")
 		return
 	}
 }
@@ -43,8 +57,6 @@ func UpdateSchedules() {
 func (s *Scheduler) Start() error {
 	exec := cron.New(cron.WithSeconds())
 
-	// 启动cron服务
-	s.cron.Start()
 
 	// 更新任务列表
 	if err := s.Update(); err != nil {
@@ -54,12 +66,23 @@ func (s *Scheduler) Start() error {
 	}
 
 	// 每30秒更新一次任务列表
-	spec := "*/30 * * * * *"
-	if _, err := exec.AddFunc(spec, UpdateSchedules); err != nil {
-		log.Errorf("add func update schedulers error: %s", err.Error())
+	//spec := "*/30 * * * * *"
+	//if _, err := exec.AddFunc(spec, UpdateSchedules); err != nil {
+	//	log.Errorf("add func update schedulers error: %s", err.Error())
+	//	debug.PrintStack()
+	//	return err
+	//}
+
+	// 发送邮件
+	if _, err := exec.AddFunc("0 0 23 * * ?", mail.SendEmail); err != nil {
+		log.Errorf("add func update sendmail error: %s", err.Error())
 		debug.PrintStack()
 		return err
 	}
+
+	exec.Start()
+	// 启动cron服务
+	s.cron.Start()
 	return nil
 }
 

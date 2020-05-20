@@ -1,5 +1,5 @@
 mysql:
-  host: localhost
+  host: 172.17.0.3
   port: 3306
   db: schedule
   username: root
@@ -21,3 +21,22 @@ gorm:
   table_prefix: ""
   # 是否启用自动映射数据库表结构
   enable_auto_migrate: true
+
+mongo:
+  host: 172.17.0.5
+  port: 27017
+  db: schedule
+  username: ""
+  password: ""
+  authSource: "admin"
+
+mail:
+  server: smtp.exmail.qq.com
+  subject: "定时任务监控结果"
+  receiver:
+    - 1731692911@qq.com
+    - leisunsun98@gmail.com
+  stmp:
+    user: sunlei@aizinger.com
+    password: uu4DzbcvcBaMddde
+    port: 465

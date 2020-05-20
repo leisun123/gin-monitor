@@ -36,6 +36,13 @@ func main()  {
 	}
 	log.Info("initialized schedule successfully")
 
+	// 初始化Mongodb数据库
+	if err := model.InitMongo(); err != nil {
+		log.Error("init mongodb error:" + err.Error())
+		debug.PrintStack()
+		panic(err)
+	}
+	log.Info("initialized mongodb successfully")
 	router := gin.Default()
 	task := router.Group("/")
 	{
